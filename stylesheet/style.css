@@ -1,0 +1,30 @@
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0px;
+  padding: 0px;
+  font-family: 'Roboto', sans-serif;
+}
+
+footer {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: black;
+  color: white;
+  justify-content: center;
+  align-self: center;
+  align-items: center;
+  gap: 5px;
+  font-size: 18px;
+  display: flex;
+}
+
+a { 
+  color: inherit; 
+}
+
+main {
+  display: flex;
+}
