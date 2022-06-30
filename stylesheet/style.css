@@ -4,6 +4,8 @@ html, body {
   margin: 0px;
   padding: 0px;
   font-family: 'Roboto', sans-serif;
+  text-align: center;
+  background-color: rgb(0 0 255 / 6%); /* Black background with opacity */
 }
 
 footer {
@@ -25,6 +27,175 @@ a {
   color: inherit; 
 }
 
-main {
+header {
+  margin: 0rem 1rem 0rem 1rem;
+}
+
+.animateChar {
+  text-transform: uppercase;
+  background-image: linear-gradient(
+    -225deg,
+    #231557 0%,
+    #44107a 29%,
+    #8147c0 67%,
+    #c38bff 100%
+  );
+  background-size: auto auto;
+  background-clip: border-box;
+  background-size: 200% auto;
+  color: #fff;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: textclip 2s linear infinite;
+  display: inline-block;
+      font-size: 190px;
+}
+
+@keyframes textclip {
+  to {
+    background-position: 200% center;
+  }
+}
+
+.gamecontainer {
+  padding: 7.5rem;
   display: flex;
+  gap: 3rem;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  filter: blur(0.1rem);
+}
+
+.board {
+  display: flex;
+  gap: 10rem;
+  align-items: center;
+}
+
+.gameboard {
+  display: grid;
+  grid-template-columns: repeat(3, 50px);
+  grid-template-rows: repeat(3, 50px);
+}
+
+.grid {
+  background-color: transparent;
+  background-repeat: no-repeat;
+  border: none;
+  border-right: solid 0.1rem black;
+  border-bottom: solid 0.1rem black;
+  cursor: pointer;
+  overflow: hidden;
+  outline: none;
+}
+
+.nob {
+  border-bottom: none;
+}
+
+.nor {
+  border-right: none;
+}
+
+#overlay,
+#overlayWinner {
+  position: fixed; /* Sit on top of the page content */
+  width: 100%; /* Full width (cover the whole page) */
+  height: 100%; /* Full height (cover the whole page) */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.1); /* Black background with opacity */
+  z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
+  cursor: pointer; /* Add a pointer on hover */
+}
+
+#overlay {
+  display: block;
+}
+
+#overlayWinner {
+  display: none;
+}
+
+.overlayContainer {
+  padding: 18.5rem;
+  display: flex;
+  flex-direction: column;
+  background-color: rgba(0,0,255,0.1); /* Black background with opacity */
+}
+
+.startPlayContainer {
+  padding: 3rem;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  background-color: rgba(0,0,255,0.1); /* Black background with opacity */
+}
+
+.playButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #E5E7EB;
+  border: 1px solid #E5E7EB;
+  border-radius: 1rem;
+  padding: 0.5rem 0.7rem;
+  filter: drop-shadow(1px 2px 0 rgb(184, 184, 184));
+}
+
+.playerForm {
+  padding: 0rem 3rem 3rem 3rem;
+  display: none;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  background-color: rgba(0,0,255,0.1); /* Black background with opacity */
+}
+
+.playAgain {
+  align-self: flex-start;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+#btnPlayAgain {
+  display: none;
+}
+
+#btnReset {
+  display: none;
+}
+
+.playButton:hover:enabled {
+  filter: brightness(90%) drop-shadow(1px 2px 0 rgb(184, 184, 184));
+}
+
+.playButton:active:enabled {
+  transform: translateY(4px) translateX(2px);
+  filter: brightness(90%) drop-shadow(1px 1px 0 #666);
+}
+
+input {
+  border: #E5E7EB solid 0.1rem;
+  border-radius: 0.2rem;
+  box-shadow: 0rem 0.5rem 0.9rem rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+
+input:invalid {
+  border: rgb(185, 28, 28) solid 0.1rem;
+}
+
+input:valid {
+  border: rgb(89, 109, 72) solid 0.1rem;
+}
+
+input:focus {
+  border: rgb(29, 78, 216) solid 0.1rem;
+  outline: none;
 }

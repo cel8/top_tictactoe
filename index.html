@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Blank Page</title>
+  <title>Tic Tac Toe</title>
   <link href="./stylesheet/normalize.css" rel="stylesheet"></style>
   <link href="./stylesheet/style.css" rel="stylesheet"></style>
   <script src="https://kit.fontawesome.com/4c536a6bd5.js" crossorigin="anonymous"></script>
@@ -13,12 +13,86 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">  
 </head>
 <body>
-  <header></head>  
-  <main></main>
+  <header><div class="animateChar">TIC TAC TOE</div></header>  
+  <main>
+    <div class="gamecontainer">
+      <div class="board">
+        <div id="boardPlayerA" class="player">
+          <img class="icon">
+          <div class="playerName"></div>
+          <div>
+            <p>Score</p>
+            <p class="score"></p>
+          </div>
+        </div>
+        <div class="gameboard">
+          <button class="grid" data-x="0" data-y="0">
+          </button>
+          <button class="grid" data-x="0" data-y="1">
+          </button>
+          <button class="grid nor" data-x="0" data-y="2">
+          </button>
+          <button class="grid" data-x="1" data-y="0">
+          </button>
+          <button class="grid" data-x="1" data-y="1">
+          </button>
+          <button class="grid nor" data-x="1" data-y="2">
+          </button>
+          <button class="grid nob" data-x="2" data-y="0">
+          </button>
+          <button class="grid nob" data-x="2" data-y="1">
+          </button>
+          <button class="grid nob nor" data-x="2" data-y="2">
+          </button>
+        </div>
+        <div id="boardPlayerB" class="player">
+          <img class="icon">
+          <div class="playerName"></div>
+          <div>
+            <p>Score</p>
+            <p class="score"></p>
+          </div>
+        </div>
+      </div>
+      <div class="userRound"></div>
+      <div class="playAgain">
+        <button id="btnPlayAgain" class="playButton">Play again</button>
+        <button id="btnReset" class="playButton">Reset</button>
+      </div>
+    </div>
+    <div id="overlay">
+      <div class="overlayContainer">
+        <div class="startPlayContainer">
+          <button id="players" class="playButton">
+            <p>Two Players</p>
+            <img src="./resources/images/svg/account-multiple-outline.svg" alt="multipleUsers" class="icon">
+          </button>
+          <button id="bot" class="playButton">
+            <p>AI Bot</p>
+            <img src="./resources/images/svg/robot-angry-outline.svg" alt="botUser" class="icon">
+          </button>
+        </div>
+        <form class="playerForm">
+          <label for="playerA" id="labelA">First player name</label>
+          <input type="text" name="playerA" id="playerA" placeholder="First player">
+          <label for="playerB" id="labelB">Second player name</label>
+          <input type="text" name="playerB" id="playerB" placeholder="Second player">
+          <button type="button" id="back" class="playButton">Back</button>
+          <button type="submit" value="submit" class="playButton">Submit</button>
+        </form>
+      </div>
+    </div>
+    <div id="overlayWinner">
+      <div class="overlayContainer winnerDiv">
+        <img>
+        <p></p>
+      </div>
+    </div>
+  </main>
   <footer>
     <p>Copyright © 2022 Alessandro Celotti</p>
     <a href="https://github.com/cel8" target="_blank"><i class="fab fa-github"></i></a>
   </footer>
 </body>
-<script src="./script/script.js"></script>
+<script type="module" src="./script/script.js"></script>
 </html> 
