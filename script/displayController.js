@@ -3,7 +3,7 @@
 const svgPath = './../resources/images/svg/';
 const boardPlayerA = document.querySelector('#boardPlayerA');
 const boardPlayerB = document.querySelector('#boardPlayerB');
-const overlayWinner = document.querySelector('#overlayWinner');
+const divOverlayWinner = document.querySelector('#overlayWinner');
 const divGameContainer = document.querySelector('.gamecontainer');
 const divWinner = document.querySelector('.winnerDiv');
 const divUserRound = document.querySelector('.userRound');
@@ -20,50 +20,88 @@ export class DisplayController {
   setPlayerB(playerB) {
     this.playerB = playerB;
   }
+  incPlayerScore(winnerSide) {
+    const winnerPlayer = (winnerSide === this.playerA.side ? this.playerA
+                                                           : this.playerB);
+    const divBoardPlayerId = (winnerSide === 'X' ? '#boardPlayerA'
+                                                 : '#boardPlayerB');
+    const boardPlayer = document.querySelector(divBoardPlayerId);
+    const score = boardPlayer.querySelector('.score');
+    winnerPlayer.increaseScore();
+    score.textContent = winnerPlayer.score;
+  }
+  resetScore() {
+    const scoreA = boardPlayerA.querySelector('.score');
+    const scoreB = boardPlayerB.querySelector('.score');
+    this.playerA.score = 0;
+    scoreA.textContent = '0';
+    this.playerB.score = 0;
+    scoreB.textContent = '0';
+  }
   loadLeftPlayer(playerName, icon) {
     const img = boardPlayerA.querySelector('.icon');
     const name = boardPlayerA.querySelector('.playerName');
+    const score = boardPlayerA.querySelector('.score');
     img.setAttribute('src', svgPath + icon);
     name.textContent = playerName;
+    score.textContent = '0';
   }
   loadRightPlayer(playerName, icon) {
     const img = boardPlayerB.querySelector('.icon');
     const name = boardPlayerB.querySelector('.playerName');
+    const score = boardPlayerB.querySelector('.score');
     img.setAttribute('src', svgPath + icon);
     name.textContent = playerName;
+    score.textContent = '0';
   }
   unloadLeftPlayer() {
     const img = boardPlayerA.querySelector('.icon');
     const name = boardPlayerA.querySelector('.playerName');
+    const score = boardPlayerA.querySelector('.score');
     img.removeAttribute('src');
     name.textContent = '';
+    score.textContent = '';
   }
   unloadRightPlayer() {
     const img = boardPlayerB.querySelector('.icon');
     const name = boardPlayerB.querySelector('.playerName');
+    const score = boardPlayerB.querySelector('.score');
     img.removeAttribute('src');
     name.textContent = '';
+    score.textContent = '';
   }
   toggleCurrentPlayer() {
     this.currentPlayer = (this.currentPlayer === this.playerA ? this.playerB 
                                                               : this.playerA);
-    this.loadPlayerRound(this.currentPlayer.name);
+    this.loadPlayerRound(this.currentPlayer.name, this.currentPlayer.side);
   }
   showWinner(winner) {
     divGameContainer.style.webkitFilter = "blur(0.1rem)";
-    overlayWinner.style.display = 'block';
+    divOverlayWinner.style.display = 'block';
+    const img = divWinner.querySelector('img');
     const text = divWinner.querySelector('p');
     if(winner !== 'Tie') {
       const winnerPlayer = (winner === this.playerA.side ? this.playerA
                                                          : this.playerB);
-      const img = divWinner.querySelector('img');
+      this.incPlayerScore(winner);
       const svgName = (winnerPlayer.type === 'bot' ? 'robot-love-outline.svg' 
                                                    : 'account-heart-outline.svg');
       img.setAttribute('src', svgPath + svgName);
       text.textContent = `The winner is ${winnerPlayer.name}.`;
     } else {
+      img.removeAttribute('src');
       text.textContent = `It's a tie.`
     }
+  }
+  setSlot(x, y, side) {
+    const target = document.querySelector(`[data-x='${x}'][data-y='${y}']`);
+    target.textContent = side;
+  }
+  resetSlots() {
+    const targets = document.querySelectorAll('.grid');
+    targets.forEach(target => {
+      target.textContent = '';
+    });
   }
   showPlayers() {
     function getIconName(player) {
@@ -75,21 +113,21 @@ export class DisplayController {
       const rightSvgName = getIconName(this.playerB.name);
       this.loadLeftPlayer(this.playerA.name, leftSvgName);
       this.loadRightPlayer(this.playerB.name, rightSvgName);
-      this.loadPlayerRound(this.playerA.name);
+      this.currentPlayer = this.playerA;
     } else {
       const leftSvgName = getIconName(this.playerB.name);
       const rightSvgName = getIconName(this.playerA.name);
       this.loadLeftPlayer(this.playerB.name, leftSvgName);
       this.loadRightPlayer(this.playerA.name, rightSvgName);
-      this.loadPlayerRound(this.playerB.name);
+      this.currentPlayer = this.playerB;
     }
-    this.currentPlayer = this.playerA;
+    this.loadPlayerRound(this.currentPlayer.name, this.currentPlayer.side);
   }
   getCurrentPlayer() {
     return this.currentPlayer;
   }
-  loadPlayerRound(playerName) {
-    divUserRound.textContent = `${playerName} round.`;
+  loadPlayerRound(playerName, playerSide) {
+    divUserRound.textContent = `${playerName}: ${playerSide} round.`;
   }
   unloadPlayers() {
     divUserRound.textContent = '';

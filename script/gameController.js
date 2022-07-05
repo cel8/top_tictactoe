@@ -27,11 +27,18 @@ export class GameController {
       this.playUserRound(x,y);
     }
   }
+  resetGame() {
+    this.displayController.resetSlots();
+    this.resetBoard();
+  }
+  restartGame() {
+    this.resetGame();
+    this.displayController.resetScore();
+  }
   playUserRound(x,y) {
     if(this.checkAvailable(x,y)) {
       const player = this.displayController.getCurrentPlayer();
-      const target = document.querySelector(`[data-x='${x}'][data-y='${y}']`);
-      target.textContent = player.side;
+      this.displayController.setSlot(x, y, player.side);
       this.setBusy(player.side, x, y);
       const winner = this.checkWinner();
       if(winner === null) {

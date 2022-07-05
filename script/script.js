@@ -17,6 +17,7 @@ const frmPlayers = document.querySelector('.playerForm');
 const divGameContainer = document.querySelector('.gamecontainer');
 const divWinner = document.querySelector('.winnerDiv');
 const divOverlay = document.querySelector('#overlay');
+const divOverlayWinner = document.querySelector('#overlayWinner');
 
 const patterns = {
   playerA: /^[a-z\s']{2,30}$/i,
@@ -28,7 +29,7 @@ const displayController = new DisplayController();
 const gameController = new GameController();
 
 function validate(field, regex) {
-  if(regex.test(field.value)) {
+  if (regex.test(field.value)) {
     field.setCustomValidity('');
   } else {
     field.setCustomValidity('invalid');
@@ -37,7 +38,7 @@ function validate(field, regex) {
 
 inputs.forEach((input) => {
   input.addEventListener('keyup', (e) => {
-    if(undefined != e.target.attributes.name) {
+    if (undefined != e.target.attributes.name) {
       validate(e.target, patterns[e.target.attributes.name.value]);
     }
   });
@@ -91,8 +92,15 @@ btnBack.onclick = (e) => {
   restoreForm();
 }
 
+btnReset.onclick = (e) => {
+  gameController.restartGame();
+  btnReset.style.display = 'none';
+}
+
 divWinner.onclick = (e) => {
-  console.log("Winner click");
+  gameController.resetGame();
+  setGameBoardForeground();
+  btnReset.style.display = 'block';
 }
 
 frmPlayers.onsubmit = (e) => {
@@ -101,7 +109,7 @@ frmPlayers.onsubmit = (e) => {
   const firstPlayerSide = Math.random() < 0.5;
   const secondPlayerSide = !firstPlayerSide;
   displayController.setPlayerA(generatePlayer(iptPlayerA.value, firstPlayerSide));
-  if(btnPlayers.style.display === 'none') {
+  if (btnPlayers.style.display === 'none') {
     displayController.setPlayerB(generateBot(secondPlayerSide));
   } else {
     const iptPlayerB = frmPlayers.querySelector('#playerB');
@@ -148,12 +156,13 @@ function onGridCellPresses(e) {
   const target = e.target;
   const x = +target.dataset.x;
   const y = +target.dataset.y;
-  gameController.playRound(x,y);
+  gameController.playRound(x, y);
 }
 
 function setGameBoardForeground() {
   divGameContainer.style.webkitFilter = "blur(0rem)";
   divOverlay.style.display = 'none';
+  divOverlayWinner.style.display = 'none';
   btnPlayAgain.style.display = 'block';
 }
 

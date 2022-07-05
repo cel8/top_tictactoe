@@ -121,6 +121,10 @@ header {
   display: none;
 }
 
+#overlayWinner > .overlayContainer {
+  align-items: center;
+}
+
 .overlayContainer {
   padding: 18.5rem;
   display: flex;
