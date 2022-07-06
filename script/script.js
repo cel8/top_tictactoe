@@ -95,12 +95,14 @@ btnBack.onclick = (e) => {
 btnReset.onclick = (e) => {
   gameController.restartGame();
   btnReset.style.display = 'none';
+  gameController.startRound();
 }
 
 divWinner.onclick = (e) => {
   gameController.resetGame();
   setGameBoardForeground();
   btnReset.style.display = 'block';
+  gameController.startRound();
 }
 
 frmPlayers.onsubmit = (e) => {
@@ -110,7 +112,9 @@ frmPlayers.onsubmit = (e) => {
   const secondPlayerSide = !firstPlayerSide;
   displayController.setPlayerA(generatePlayer(iptPlayerA.value, firstPlayerSide));
   if (btnPlayers.style.display === 'none') {
-    displayController.setPlayerB(generateBot(secondPlayerSide));
+    const bot = generateBot(secondPlayerSide);
+    displayController.setPlayerB(bot);
+    gameController.setBotField(bot.side);
   } else {
     const iptPlayerB = frmPlayers.querySelector('#playerB');
     displayController.setPlayerB(generatePlayer(iptPlayerB.value, secondPlayerSide));
@@ -120,6 +124,7 @@ frmPlayers.onsubmit = (e) => {
   // Restore form
   restoreForm();
   setGameBoardForeground();
+  gameController.startRound();
 }
 
 function generatePlayer(playerName, playerSide) {
@@ -167,6 +172,7 @@ function setGameBoardForeground() {
 }
 
 function setStartGameForeground() {
+  gameController.resetGame();
   displayController.unloadPlayers();
   divGameContainer.style.webkitFilter = "blur(0.1rem)";
   divOverlay.style.display = 'block';

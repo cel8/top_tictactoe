@@ -1,7 +1,12 @@
+// Imports
+
+import { BotField } from './botFieldSingleton.js'
+
 export class GameController {
   constructor() {
     this.resetBoard();
     this.displayController = null;
+    this.botField = null;
   }
   isAvailableSpot() {
     return this.board.some(row => row.includes(''));
@@ -19,6 +24,16 @@ export class GameController {
   setDisplayController(displayController) {
     this.displayController = displayController;
   }
+  setBotField(botSpot) {
+    this.botField = BotField.getInstance();
+    this.botField.setBotField(botSpot);
+  }
+  startRound() {
+    const player = this.displayController.getCurrentPlayer();
+    if(player.type === 'bot') {
+      this.playBotRound();
+    }
+  }
   playRound(x = -1, y = -1) {
     const player = this.displayController.getCurrentPlayer();
     if(player.type === 'bot') {
@@ -35,27 +50,85 @@ export class GameController {
     this.resetGame();
     this.displayController.resetScore();
   }
+  playNextRound() {
+    const winner = this.checkWinner();
+    if(winner === null) {
+      this.displayController.toggleCurrentPlayer();
+      const player = this.displayController.getCurrentPlayer();
+      if(player.type === 'bot') {
+        this.playRound();
+      }
+    } else {
+      this.displayController.showWinner(winner);
+    }
+  }
   playUserRound(x,y) {
     if(this.checkAvailable(x,y)) {
       const player = this.displayController.getCurrentPlayer();
-      this.displayController.setSlot(x, y, player.side);
       this.setBusy(player.side, x, y);
-      const winner = this.checkWinner();
-      if(winner === null) {
-        this.displayController.toggleCurrentPlayer();
-      } else {
-        this.displayController.showWinner(winner);
-      }
+      this.playNextRound();
     }
   }
   playBotRound() {
-
+    // AI best score
+    let bestScore = -Infinity;
+    // Move spot 
+    let move;
+    for(let i = 0; i < 3; ++i) {
+      for(let j = 0; j < 3; ++j) {
+        if(this.checkAvailable(i,j)) {
+          this.board[i][j] = this.botField.spot;
+          let score = this.minimax(this.board, 0, false);
+          this.board[i][j] = '';
+          if(score > bestScore) {
+            bestScore = score;
+            move = { i, j };
+          }
+        }
+      }
+    }
+    this.setBusy(this.botField.spot, move.i, move.j);
+    this.playNextRound();
+  }
+  minimax(board, depth, isMaximizing) {
+    let result = this.checkWinner();
+    if(result !== null) {
+      return this.botField.scores[result];
+    }
+    if(isMaximizing) {
+      let bestScore = -Infinity;
+      for(let i = 0; i < 3; ++i) {
+        for(let j = 0; j < 3; ++j) {
+          if(this.checkAvailable(i,j)) {
+            board[i][j] = this.botField.spot;
+            let score = this.minimax(board, depth + 1, false);
+            board[i][j] = '';
+            bestScore = Math.max(score, bestScore);
+          }
+        }
+      }
+      return bestScore;
+    } else {
+      let bestScore = Infinity;
+      for(let i = 0; i < 3; ++i) {
+        for(let j = 0; j < 3; ++j) {
+          if(this.checkAvailable(i,j)) {
+            board[i][j] = this.botField.humanSpot;
+            let score = this.minimax(board, depth + 1, true);
+            board[i][j] = '';
+            bestScore = Math.min(score, bestScore);
+          }
+        }
+      }
+      return bestScore;
+    }
   }
   checkAvailable(x, y) {
     return (this.board[x][y] === '');
   }
-  setBusy(value, x, y) {
-    this.board[x][y] = value;
+  setBusy(side, x, y) {
+    this.displayController.setSlot(x, y, side);
+    this.board[x][y] = side;
   }
   checkWinner() {
     let winner = null;
@@ -95,9 +168,8 @@ export class GameController {
 
     // Tie
     if(winner === null && !this.isAvailableSpot()) {
-      winner = 'Tie';
+      winner = 'tie';
     }
-    console.log(winner);
     return winner;
   }
 }

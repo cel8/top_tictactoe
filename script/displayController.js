@@ -80,7 +80,7 @@ export class DisplayController {
     divOverlayWinner.style.display = 'block';
     const img = divWinner.querySelector('img');
     const text = divWinner.querySelector('p');
-    if(winner !== 'Tie') {
+    if(winner !== 'tie') {
       const winnerPlayer = (winner === this.playerA.side ? this.playerA
                                                          : this.playerB);
       this.incPlayerScore(winner);
