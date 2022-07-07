@@ -76,19 +76,21 @@ header {
 
 .gameboard {
   display: grid;
-  grid-template-columns: repeat(3, 50px);
-  grid-template-rows: repeat(3, 50px);
+  grid-template-columns: repeat(3, 5rem);
+  grid-template-rows: repeat(3, 5rem);
 }
 
 .grid {
   background-color: transparent;
   background-repeat: no-repeat;
   border: none;
-  border-right: solid 0.1rem black;
-  border-bottom: solid 0.1rem black;
+  border-right: solid 0.2rem black;
+  border-bottom: solid 0.2rem black;
   cursor: pointer;
   overflow: hidden;
   outline: none;
+  font-size: xx-large;
+  font-weight: 600;
 }
 
 .nob {
@@ -97,6 +99,10 @@ header {
 
 .nor {
   border-right: none;
+}
+
+.userRound {
+  font-size: x-large;
 }
 
 #overlay,
@@ -121,15 +127,40 @@ header {
   display: none;
 }
 
-#overlayWinner > .overlayContainer {
+#overlayWinner > .winnerDiv {
   align-items: center;
+  font-size: x-large;
+  font-weight: 600;
+  color: #001f3f;
+  background-color: rgba(0, 116, 217,0.7);
+  
 }
 
 .overlayContainer {
-  padding: 18.5rem;
+  padding-top: 18.5rem;
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   background-color: rgba(0,0,255,0.1); /* Black background with opacity */
+}
+
+.player {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+  font-size: larger;
+}
+
+.scoreContainer > p:first-of-type {
+  margin-top: 0rem;
+  font-size: large;
+  font-weight: 600;
+}
+
+.scoreContainer {
+  display: none;
 }
 
 .startPlayContainer {
@@ -182,6 +213,10 @@ header {
 .playButton:active:enabled {
   transform: translateY(4px) translateX(2px);
   filter: brightness(90%) drop-shadow(1px 1px 0 #666);
+}
+
+label {
+  font-size: large;
 }
 
 input {
