@@ -2,6 +2,8 @@
 
 import { BotField } from './botFieldSingleton.js'
 
+// Game controller class
+
 export class GameController {
   constructor() {
     this.resetBoard();
@@ -37,7 +39,9 @@ export class GameController {
   playRound(x = -1, y = -1) {
     const player = this.displayController.getCurrentPlayer();
     if(player.type === 'bot') {
-      this.playBotRound();
+      setTimeout(() => {
+        this.playBotRound();
+      }, 500);      
     } else {
       this.playUserRound(x,y);
     }
@@ -130,46 +134,58 @@ export class GameController {
     this.displayController.setSlot(x, y, side);
     this.board[x][y] = side;
   }
+  equalsAll(row) {
+    return row.every((value, _, array) => {
+      return (value !== '') && (array[0] === value);
+    });
+  }
+  checkWinnerDiagonal(board, reverse = false) {
+    const getDiagonal = (matrix) => matrix.map((row, index, _) => row[index]);
+    const getReverseDiagonal = (matrix) => matrix.map((row, index, self) => row[self.length - 1 - index]);
+    const row = (!reverse ? getDiagonal(board) : getReverseDiagonal(board));
+    if(this.equalsAll(row)) {
+      return row[0];
+    }
+    return null;
+  }
+  checkWinnerRowCombo(board, column = false) {
+    const arrayColumn = (array, n) => array.map((x) => x[n]);
+    for(let i = 0; i < 3; ++i) {
+      const row = (!column ? board[i] : arrayColumn(board, i));
+      if(this.equalsAll(row)) {
+        return row[0];
+      }
+    }
+    return null;
+  }
   checkWinner() {
     let winner = null;
+
     // Rows
-    for(let i = 0; i < 3; ++i) {
-      if(this.board[i][0] === '') {
-        continue;
-      } else {
-        if(this.equals3(this.board[i][0], this.board[i][1], this.board[i][2])) {
-          winner = this.board[i][0];
-          break;
-        }
-      }
+    if(null !== (winner = this.checkWinnerRowCombo(this.board))) {
+      return winner;
     }
+
     // Columns
-    for(let i = 0; i < 3; ++i) {
-      if(this.board[0][i] === '') {
-        continue;
-      } else {
-        if(this.equals3(this.board[0][i], this.board[1][i], this.board[2][i])) {
-          winner = this.board[0][i];
-          break;
-        }
-      }
+    if(null !== (winner = this.checkWinnerRowCombo(this.board, true))) {
+      return winner;
     }
+
     // Diagonal
-    if(this.board[1][1] !== '') {
-      // Primary
-      if(this.equals3(this.board[0][0], this.board[1][1], this.board[2][2])) {
-        // Primary diagonal
-        winner = this.board[0][0];
-      } else if(this.equals3(this.board[0][2], this.board[1][1], this.board[2][0])) { 
-        // Secondary diagonal
-        winner = this.board[1][1];
-      }
-    } 
+    if(null !== (winner = this.checkWinnerDiagonal(this.board))) {
+      return winner;
+    }
+
+    // Reverse diagonal
+    if(null !== (winner = this.checkWinnerDiagonal(this.board, true))) {
+      return winner;
+    }
 
     // Tie
-    if(winner === null && !this.isAvailableSpot()) {
-      winner = 'tie';
+    if(!this.isAvailableSpot()) {
+      return 'tie';
     }
-    return winner;
+
+    return null;
   }
 }
