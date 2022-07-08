@@ -1,6 +1,6 @@
 // Variables
 
-const svgPath = './../resources/images/svg/';
+const svgPath = './resources/images/svg/';
 const boardPlayerA = document.querySelector('#boardPlayerA');
 const boardPlayerB = document.querySelector('#boardPlayerB');
 const divOverlayWinner = document.querySelector('#overlayWinner');
