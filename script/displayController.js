@@ -1,3 +1,7 @@
+// Imports
+
+import { playerSide, playerType } from './userFactory.js'
+
 // Variables
 
 const svgPath = './resources/images/svg/';
@@ -7,6 +11,8 @@ const divOverlayWinner = document.querySelector('#overlayWinner');
 const divGameContainer = document.querySelector('.gamecontainer');
 const divWinner = document.querySelector('.winnerDiv');
 const divUserRound = document.querySelector('.userRound');
+
+export const resultTie = 'tie';
 
 export class DisplayController {
   constructor(playerA, playerB) {
@@ -23,8 +29,8 @@ export class DisplayController {
   incPlayerScore(winnerSide) {
     const winnerPlayer = (winnerSide === this.playerA.side ? this.playerA
                                                            : this.playerB);
-    const divBoardPlayerId = (winnerSide === 'X' ? '#boardPlayerA'
-                                                 : '#boardPlayerB');
+    const divBoardPlayerId = (winnerSide === playerSide.X ? '#boardPlayerA'
+                                                          : '#boardPlayerB');
     const boardPlayer = document.querySelector(divBoardPlayerId);
     const score = boardPlayer.querySelector('.score');
     winnerPlayer.increaseScore();
@@ -88,17 +94,17 @@ export class DisplayController {
     divOverlayWinner.style.display = 'block';
     const img = divWinner.querySelector('img');
     const text = divWinner.querySelector('p');
-    if(winner !== 'tie') {
+    if(winner !== resultTie) {
       const winnerPlayer = (winner === this.playerA.side ? this.playerA
                                                          : this.playerB);
       this.incPlayerScore(winner);
-      const svgName = (winnerPlayer.type === 'bot' ? 'robot-love-outline.svg' 
-                                                   : 'account-heart-outline.svg');
+      const svgName = (winnerPlayer.type === playerType.ai ? 'robot-love-outline.svg' 
+                                                           : 'account-heart-outline.svg');
       img.setAttribute('src', svgPath + svgName);
       text.textContent = `The winner is ${winnerPlayer.name}`;
     } else {
       img.removeAttribute('src');
-      text.textContent = `It's a tie`
+      text.textContent = `It's a ${resultTie}`
     }
   }
   setSlot(x, y, side) {
@@ -113,10 +119,10 @@ export class DisplayController {
   }
   showPlayers() {
     function getIconName(player) {
-      return (player.type === 'bot' ? 'robot-angry-outline.svg' 
-                                    : 'account-outline.svg');
+      return (player.type === playerType.ai ? 'robot-angry-outline.svg' 
+                                            : 'account-outline.svg');
     }
-    if(this.playerA.side === 'X') {
+    if(this.playerA.side === playerSide.X) {
       const leftSvgName = getIconName(this.playerA);
       const rightSvgName = getIconName(this.playerB);
       this.loadLeftPlayer(this.playerA.name, leftSvgName);

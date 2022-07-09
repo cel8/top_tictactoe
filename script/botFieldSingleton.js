@@ -1,3 +1,5 @@
+import { playerSide } from "./userFactory.js";
+
 // Bot in X side
 const botScoresX = {
   X: +1,
@@ -12,21 +14,31 @@ const botScoresO = {
   tie: 0
 };
 
+export const botDifficulty = {
+  easy: 'easy',
+  medium: 'medium',
+  hard: 'hard',
+  unbeatable: 'unbeatable'
+};
+
 class BotFieldSingleton {
   constructor() {
     // set some properties for our singleton
     this.spot = null;
     this.humanSpot = null;
     this.scores = null;
+    this.difficulty = null;
   }
-  setBotField(side) {
-    this.spot = side || 'X';
-    if(this.spot === 'X') {
-      this.humanSpot = 'O';
+  setBotField(side, difficulty) {
+    this.spot = side || playerSide.X;
+    if(this.spot === playerSide.X) {
+      this.humanSpot = playerSide.O;
       this.scores = botScoresX;
+      this.difficulty = difficulty;
     } else {
-      this.humanSpot = 'X';
+      this.humanSpot = playerSide.X;
       this.scores = botScoresO;
+      this.difficulty = difficulty;
     }
   }
 }

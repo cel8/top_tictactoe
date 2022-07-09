@@ -1,8 +1,9 @@
 // Imports
 
-import { PlayerFactory } from './userFactory.js'
+import { PlayerFactory, playerType } from './userFactory.js'
 import { DisplayController } from './displayController.js'
 import { GameController } from './gameController.js'
+import { botDifficulty } from './botFieldSingleton.js'
 
 // Variables
 
@@ -18,6 +19,12 @@ const divGameContainer = document.querySelector('.gamecontainer');
 const divWinner = document.querySelector('.winnerDiv');
 const divOverlay = document.querySelector('#overlay');
 const divOverlayWinner = document.querySelector('#overlayWinner');
+const labPlayerA = frmPlayers.querySelector('#labelA');
+const labPlayerB = frmPlayers.querySelector('#labelB');
+const iptPlayerA = frmPlayers.querySelector('#playerA');
+const iptPlayerB = frmPlayers.querySelector('#playerB');
+const labBotDiff = frmPlayers.querySelector('#labelBotDifficulty');
+const iptBotDiff = frmPlayers.querySelector('#inputBotDifficulty');
 
 const patterns = {
   playerA: /^[a-z\s']{2,30}$/i,
@@ -50,10 +57,6 @@ cellsGridBoard.forEach((cell) => {
 
 btnPlayers.onclick = (e) => {
   // Display form
-  const labPlayerA = frmPlayers.querySelector('#labelA');
-  const labPlayerB = frmPlayers.querySelector('#labelB');
-  const iptPlayerA = frmPlayers.querySelector('#playerA');
-  const iptPlayerB = frmPlayers.querySelector('#playerB');
   labPlayerA.textContent = 'First player name';
   iptPlayerA.placeholder = 'First player';
   iptPlayerA.required = true;
@@ -61,6 +64,10 @@ btnPlayers.onclick = (e) => {
   labPlayerB.style.display = 'block';
   iptPlayerB.style.display = 'block';
   frmPlayers.style.display = 'grid';
+  // Hide bot difficulty
+  labBotDiff.style.display = 'none';
+  iptBotDiff.style.display = 'none';
+  iptBotDiff.required = false;
   // Hidden bot button and disable current button
   btnPlayers.disabled = true;
   btnBot.style.display = 'none';
@@ -68,13 +75,14 @@ btnPlayers.onclick = (e) => {
 
 btnBot.onclick = (e) => {
   // Display form
-  const labPlayerA = frmPlayers.querySelector('#labelA');
-  const labPlayerB = frmPlayers.querySelector('#labelB');
-  const iptPlayerA = frmPlayers.querySelector('#playerA');
-  const iptPlayerB = frmPlayers.querySelector('#playerB');
   labPlayerA.textContent = 'Player name';
   iptPlayerA.placeholder = 'Player name';
   iptPlayerA.required = true;
+  iptBotDiff.required = true;
+  // Show bot difficulty
+  labBotDiff.style.display = 'block';
+  iptBotDiff.style.display = 'block';
+  // Hide player B
   labPlayerB.style.display = 'none';
   iptPlayerB.style.display = 'none';
   iptPlayerB.required = false;
@@ -84,39 +92,37 @@ btnBot.onclick = (e) => {
   btnPlayers.style.display = 'none';
 }
 
-btnPlayAgain.onclick = (e) => {
+btnPlayAgain.onclick = () => {
   setStartGameForeground();
 }
 
-btnBack.onclick = (e) => {
+btnBack.onclick = () => {
   restoreForm();
 }
 
-btnReset.onclick = (e) => {
+btnReset.onclick = () => {
   gameController.restartGame();
   btnReset.style.display = 'none';
   gameController.startRound();
 }
 
-divWinner.onclick = (e) => {
+divWinner.onclick = () => {
   gameController.resetGame();
   setGameBoardForeground();
   btnReset.style.display = 'block';
   gameController.startRound();
 }
 
-frmPlayers.onsubmit = (e) => {
+frmPlayers.onsubmit = () => {
   e.preventDefault();
-  const iptPlayerA = frmPlayers.querySelector('#playerA');
   const firstPlayerSide = Math.random() < 0.5;
   const secondPlayerSide = !firstPlayerSide;
   displayController.setPlayerA(generatePlayer(iptPlayerA.value, firstPlayerSide));
   if (btnPlayers.style.display === 'none') {
     const bot = generateBot(secondPlayerSide);
     displayController.setPlayerB(bot);
-    gameController.setBotField(bot.side);
+    gameController.setBotField(bot.side, iptBotDiff.value);
   } else {
-    const iptPlayerB = frmPlayers.querySelector('#playerB');
     displayController.setPlayerB(generatePlayer(iptPlayerB.value, secondPlayerSide));
   }
   displayController.showPlayers();
@@ -129,7 +135,7 @@ frmPlayers.onsubmit = (e) => {
 
 function generatePlayer(playerName, playerSide) {
   return playerFactory.createPlayer({
-    playerType: 'player',
+    playerType: playerType.human,
     name: playerName,
     leftSide: playerSide
   });
@@ -137,22 +143,22 @@ function generatePlayer(playerName, playerSide) {
 
 function generateBot(playerSide) {
   return playerFactory.createPlayer({
-    playerType: 'bot',
+    playerType: playerType.ai,
     leftSide: playerSide
   });
 }
 
 function restoreForm() {
   // Disable form
-  const iptPlayerA = frmPlayers.querySelector('#playerA');
-  const iptPlayerB = frmPlayers.querySelector('#playerB');
   frmPlayers.style.display = 'none';
   btnPlayers.style.display = 'flex';
   btnBot.style.display = 'flex';
   iptPlayerA.value = '';
   iptPlayerB.value = '';
+  iptBotDiff.value = botDifficulty.easy;
   iptPlayerA.required = false;
   iptPlayerB.required = false;
+  iptBotDiff.required = false;
   btnPlayers.disabled = false;
   btnBot.disabled = false;
 }

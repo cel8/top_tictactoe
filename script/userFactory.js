@@ -1,12 +1,22 @@
+export const playerType = {
+  human: 'human',
+  ai: 'bot'
+};
+
+export const playerSide = {
+  X: 'X',
+  O: 'O'
+};
+
 class Player {
   constructor({
     name,
     leftSide
   }) {
-    this.name = name || 'Unkown';
-    this.side = (leftSide ? 'X' : 'O');
+    this.name = name || 'Unknown';
+    this.side = (leftSide ? playerSide.X : playerSide.O);
     this.score = 0;
-    this.type = 'human';
+    this.type = playerType.human;
   }
   increaseScore() {
     this.score++;
@@ -21,9 +31,9 @@ class Bot {
     leftSide
   }) {
     this.name = 'AI';
-    this.side = (leftSide ? 'X' : 'O');
+    this.side = (leftSide ? playerSide.X : playerSide.O);
     this.score = 0;
-    this.type = 'bot';
+    this.type = playerType.ai;
   }
   increaseScore() {
     this.score++;
@@ -39,10 +49,10 @@ export class PlayerFactory {
   }
   createPlayer(options) {
     switch(options.playerType) {
-      case 'player':
+      case playerType.human:
         this.playerClass = Player;
         break;
-      case 'bot':
+      case playerType.ai:
         this.playerClass = Bot;
         break;
     }
