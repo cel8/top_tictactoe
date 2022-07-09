@@ -1,8 +1,8 @@
 // Imports
 
 import { BotField, botDifficulty } from './botFieldSingleton.js'
-import { resultTie } from './displayController.js'
-import { playerType } from './userFactory.js'
+import { DisplayController, resultTie } from './displayController.js'
+import { PlayerFactory, playerType } from './userFactory.js'
 
 // Variables
 
@@ -15,7 +15,8 @@ const THINK_TIME = 500; // ms
 export class GameController {
   constructor() {
     this.resetBoard();
-    this.displayController = null;
+    this.displayController = new DisplayController();
+    this.playerFactory = new PlayerFactory();
     this.botField = null;
   }
   isAvailableSpot() {
@@ -80,6 +81,24 @@ export class GameController {
       this.setBusy(player.side, x, y);
       this.playNextRound();
     }
+  }
+  setFirstPlayer(name, side) {
+    this.displayController.setPlayerA(this.generatePlayer(name, side));
+  }
+  setSecondPlayer(name, side, isBot = false, difficulty = undefined) {
+    if(isBot) {
+      const bot = this.generateBot(side);
+      this.displayController.setPlayerB(bot);
+      this.setBotField(bot.side, difficulty);
+    } else {
+      this.displayController.setPlayerB(this.generatePlayer(name, side));
+    }
+  }
+  showGameBoard() {
+    this.displayController.showPlayers();
+  }
+  hideGameBoard() {
+    this.displayController.unloadPlayers();
   }
   getRandomSpot() {
     let i, j;
@@ -193,6 +212,19 @@ export class GameController {
       }
     }
     return null;
+  }
+  generatePlayer(playerName, playerSide) {
+    return this.playerFactory.createPlayer({
+      playerType: playerType.human,
+      name: playerName,
+      leftSide: playerSide
+    });
+  }
+  generateBot(playerSide) {
+    return this.playerFactory.createPlayer({
+      playerType: playerType.ai,
+      leftSide: playerSide
+    });
   }
   checkWinner() {
     let winner = null;

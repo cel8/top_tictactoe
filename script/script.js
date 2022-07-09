@@ -1,7 +1,5 @@
 // Imports
 
-import { PlayerFactory, playerType } from './userFactory.js'
-import { DisplayController } from './displayController.js'
 import { GameController } from './gameController.js'
 import { botDifficulty } from './botFieldSingleton.js'
 
@@ -31,8 +29,6 @@ const patterns = {
   playerB: /^[a-z\s']{2,30}$/i,
 }
 
-const playerFactory = new PlayerFactory();
-const displayController = new DisplayController();
 const gameController = new GameController();
 
 function validate(field, regex) {
@@ -55,7 +51,7 @@ cellsGridBoard.forEach((cell) => {
   cell.addEventListener('click', onGridCellPresses);
 });
 
-btnPlayers.onclick = (e) => {
+btnPlayers.onclick = () => {
   // Display form
   labPlayerA.textContent = 'First player name';
   iptPlayerA.placeholder = 'First player';
@@ -113,39 +109,20 @@ divWinner.onclick = () => {
   gameController.startRound();
 }
 
-frmPlayers.onsubmit = () => {
+frmPlayers.onsubmit = (e) => {
   e.preventDefault();
   const firstPlayerSide = Math.random() < 0.5;
-  const secondPlayerSide = !firstPlayerSide;
-  displayController.setPlayerA(generatePlayer(iptPlayerA.value, firstPlayerSide));
+  gameController.setFirstPlayer(iptPlayerA.value, firstPlayerSide);
   if (btnPlayers.style.display === 'none') {
-    const bot = generateBot(secondPlayerSide);
-    displayController.setPlayerB(bot);
-    gameController.setBotField(bot.side, iptBotDiff.value);
+    gameController.setSecondPlayer(undefined, !firstPlayerSide, true, iptBotDiff.value);
   } else {
-    displayController.setPlayerB(generatePlayer(iptPlayerB.value, secondPlayerSide));
+    gameController.setSecondPlayer(iptPlayerB.value, !firstPlayerSide);
   }
-  displayController.showPlayers();
-  gameController.setDisplayController(displayController);
+  gameController.showGameBoard();
   // Restore form
   restoreForm();
   setGameBoardForeground();
   gameController.startRound();
-}
-
-function generatePlayer(playerName, playerSide) {
-  return playerFactory.createPlayer({
-    playerType: playerType.human,
-    name: playerName,
-    leftSide: playerSide
-  });
-}
-
-function generateBot(playerSide) {
-  return playerFactory.createPlayer({
-    playerType: playerType.ai,
-    leftSide: playerSide
-  });
 }
 
 function restoreForm() {
@@ -179,7 +156,7 @@ function setGameBoardForeground() {
 
 function setStartGameForeground() {
   gameController.resetGame();
-  displayController.unloadPlayers();
+  gameController.hideGameBoard();
   divGameContainer.style.webkitFilter = "blur(0.1rem)";
   divOverlay.style.display = 'block';
   btnPlayAgain.style.display = 'none';
