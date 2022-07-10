@@ -9,7 +9,7 @@ html, body {
 }
 
 footer {
-  position: absolute;
+  position: fixed;
   left: 0;
   bottom: 0;
   width: 100%;
@@ -49,7 +49,7 @@ header {
   -webkit-text-fill-color: transparent;
   animation: textclip 2s linear infinite;
   display: inline-block;
-      font-size: 190px;
+  font-size: 190px;
 }
 
 @keyframes textclip {
@@ -61,7 +61,7 @@ header {
 .gamecontainer {
   padding: 7.5rem;
   display: flex;
-  gap: 3rem;
+  gap: 2rem;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -235,4 +235,71 @@ input:valid {
 input:focus {
   border: rgb(29, 78, 216) solid 0.1rem;
   outline: none;
+}
+
+@media only screen and (min-width: 901px) and (max-width: 1199px) {
+  html {
+    font-size: 14px;
+  }
+
+  .animateChar {
+    font-size: 150px;
+  }
+}
+
+@media only screen and (max-width: 900px) {
+  html {
+    font-size: 10px;
+  }
+
+  .animateChar {
+    font-size: 60px;
+  }
+
+  .gamecontainer {
+    padding: 3.5rem;
+  }
+
+  .board {
+    flex-direction: column;
+    gap: 0rem;
+  }
+
+  label {
+    font-size: medium;
+  }
+
+  footer {
+    font-size: 14px;
+  }
+}
+
+@media only screen and (max-height: 750px) {
+  html {
+    font-size: 12px;
+  }
+
+  .animateChar {
+    font-size: 60px;
+  }
+
+  .overlayContainer {
+    padding-top: 8rem;
+  }
+
+  .gamecontainer {
+    padding: 1rem;
+    padding-bottom: 6rem;
+  }
+}
+
+@media only screen and (max-height: 750px) and (max-width: 900px) {
+  .overlayContainer {
+    padding-top: 8rem;
+  }
+
+  .gamecontainer {
+    padding: 1rem;
+    padding-bottom: 6rem;
+  }
 }
