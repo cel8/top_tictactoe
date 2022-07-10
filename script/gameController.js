@@ -34,9 +34,6 @@ export class GameController {
       this.board.push(row);
     }
   }
-  setDisplayController(displayController) {
-    this.displayController = displayController;
-  }
   setBotField(botSpot, difficulty) {
     this.botField = BotField.getInstance();
     this.botField.setBotField(botSpot, difficulty);
