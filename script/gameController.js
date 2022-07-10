@@ -6,15 +6,17 @@ import { PlayerFactory, playerType } from './userFactory.js'
 
 // Variables
 
-const BOARD_SIZE = 3;
+export const MIN_BOARD_SIZE = 3;
+export const MAX_BOARD_SIZE = 6;
 const FREE_SPOT = '';
 const THINK_TIME = 500; // ms
+let BOARD_SIZE = MIN_BOARD_SIZE;
 
 // Game controller class
 
 export class GameController {
   constructor() {
-    this.resetBoard();
+    this.board = [];
     this.displayController = new DisplayController();
     this.playerFactory = new PlayerFactory();
     this.botField = null;
@@ -56,7 +58,7 @@ export class GameController {
     }
   }
   resetGame() {
-    this.displayController.resetSlots();
+    this.displayController.resetSlots(FREE_SPOT);
     this.resetBoard();
   }
   restartGame() {
@@ -94,10 +96,14 @@ export class GameController {
       this.displayController.setPlayerB(this.generatePlayer(name, side));
     }
   }
-  showGameBoard() {
+  showGameBoard(boardSize, buttonEventCb) {
+    BOARD_SIZE = boardSize;
+    this.resetBoard();
+    this.displayController.createSlots(FREE_SPOT, BOARD_SIZE, buttonEventCb);
     this.displayController.showPlayers();
   }
   hideGameBoard() {
+    this.displayController.removeSlots();
     this.displayController.unloadPlayers();
   }
   getRandomSpot() {

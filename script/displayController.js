@@ -9,8 +9,15 @@ const boardPlayerA = document.querySelector('#boardPlayerA');
 const boardPlayerB = document.querySelector('#boardPlayerB');
 const divOverlayWinner = document.querySelector('#overlayWinner');
 const divGameContainer = document.querySelector('.gamecontainer');
+const divGameBoard = document.querySelector('.gameboard');
 const divWinner = document.querySelector('.winnerDiv');
 const divUserRound = document.querySelector('.userRound');
+
+function removeAllChildNodes(parent) {
+  while (parent.firstChild) {
+      parent.removeChild(parent.firstChild);
+  }
+}
 
 export const resultTie = 'tie';
 
@@ -107,15 +114,43 @@ export class DisplayController {
       text.textContent = `It's a ${resultTie}`
     }
   }
+  createSlots(freeSpotText, boardSize, buttonEventCb) {
+    // Remove all child of gameboard
+    removeAllChildNodes(divGameBoard);
+    divGameBoard.style.gridTemplateColumns = `repeat(${boardSize}, 5rem)`;
+    divGameBoard.style.gridTemplateRows = `repeat(${boardSize}, 5rem)`;
+    // Create gameboard child
+    for(let i = 0; i < boardSize; ++i) {
+      for(let j = 0; j < boardSize; ++j) {
+        const button = document.createElement("button");
+        button.textContent = freeSpotText;
+        button.dataset.x = i;
+        button.dataset.y = j;
+        button.classList.add('grid');
+        button.addEventListener('click', buttonEventCb);
+        if(i === (boardSize - 1)) {
+          button.classList.add('nob');
+        }
+        if(j === (boardSize - 1)) {
+          button.classList.add('nor');
+        }
+        divGameBoard.appendChild(button);
+      }
+    }
+  }
   setSlot(x, y, side) {
-    const target = document.querySelector(`[data-x='${x}'][data-y='${y}']`);
+    const target = divGameBoard.querySelector(`[data-x='${x}'][data-y='${y}']`);
     target.textContent = side;
   }
-  resetSlots() {
-    const targets = document.querySelectorAll('.grid');
+  resetSlots(freeSpotText) {
+    const targets = divGameBoard.querySelectorAll('.grid');
     targets.forEach(target => {
-      target.textContent = '';
+      target.textContent = freeSpotText;
     });
+  }
+  removeSlots() {
+    // Remove all child of gameboard
+    removeAllChildNodes(divGameBoard);
   }
   showPlayers() {
     function getIconName(player) {

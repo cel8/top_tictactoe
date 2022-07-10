@@ -1,12 +1,11 @@
 // Imports
 
-import { GameController } from './gameController.js'
+import { GameController, MIN_BOARD_SIZE, MAX_BOARD_SIZE } from './gameController.js'
 import { botDifficulty } from './botFieldSingleton.js'
 
 // Variables
 
 const inputs = document.querySelectorAll('input');
-const cellsGridBoard = document.querySelectorAll('.grid');
 const btnPlayers = document.querySelector('#players');
 const btnBot = document.querySelector('#bot');
 const btnBack = document.querySelector('#back');
@@ -23,6 +22,7 @@ const iptPlayerA = frmPlayers.querySelector('#playerA');
 const iptPlayerB = frmPlayers.querySelector('#playerB');
 const labBotDiff = frmPlayers.querySelector('#labelBotDifficulty');
 const iptBotDiff = frmPlayers.querySelector('#inputBotDifficulty');
+const iptGridSize = frmPlayers.querySelector('#gridSize');
 
 const patterns = {
   playerA: /^[a-z\s']{2,30}$/i,
@@ -47,10 +47,6 @@ inputs.forEach((input) => {
   });
 });
 
-cellsGridBoard.forEach((cell) => {
-  cell.addEventListener('click', onGridCellPresses);
-});
-
 btnPlayers.onclick = () => {
   // Display form
   labPlayerA.textContent = 'First player name';
@@ -60,6 +56,7 @@ btnPlayers.onclick = () => {
   labPlayerB.style.display = 'block';
   iptPlayerB.style.display = 'block';
   frmPlayers.style.display = 'grid';
+  iptGridSize.setAttribute('max', MAX_BOARD_SIZE);
   // Hide bot difficulty
   labBotDiff.style.display = 'none';
   iptBotDiff.style.display = 'none';
@@ -75,6 +72,7 @@ btnBot.onclick = (e) => {
   iptPlayerA.placeholder = 'Player name';
   iptPlayerA.required = true;
   iptBotDiff.required = true;
+  iptGridSize.setAttribute('max', MIN_BOARD_SIZE);
   // Show bot difficulty
   labBotDiff.style.display = 'block';
   iptBotDiff.style.display = 'block';
@@ -118,7 +116,7 @@ frmPlayers.onsubmit = (e) => {
   } else {
     gameController.setSecondPlayer(iptPlayerB.value, !firstPlayerSide);
   }
-  gameController.showGameBoard();
+  gameController.showGameBoard(iptGridSize.value, onGridCellPresses);
   // Restore form
   restoreForm();
   setGameBoardForeground();
@@ -133,6 +131,8 @@ function restoreForm() {
   iptPlayerA.value = '';
   iptPlayerB.value = '';
   iptBotDiff.value = botDifficulty.easy;
+  iptGridSize.value = MIN_BOARD_SIZE;
+  iptGridSize.setAttribute('max', MAX_BOARD_SIZE);
   iptPlayerA.required = false;
   iptPlayerB.required = false;
   iptBotDiff.required = false;

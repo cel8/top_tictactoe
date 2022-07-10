@@ -26,24 +26,6 @@
           </div>
         </div>
         <div class="gameboard">
-          <button class="grid" data-x="0" data-y="0">
-          </button>
-          <button class="grid" data-x="0" data-y="1">
-          </button>
-          <button class="grid nor" data-x="0" data-y="2">
-          </button>
-          <button class="grid" data-x="1" data-y="0">
-          </button>
-          <button class="grid" data-x="1" data-y="1">
-          </button>
-          <button class="grid nor" data-x="1" data-y="2">
-          </button>
-          <button class="grid nob" data-x="2" data-y="0">
-          </button>
-          <button class="grid nob" data-x="2" data-y="1">
-          </button>
-          <button class="grid nob nor" data-x="2" data-y="2">
-          </button>
         </div>
         <div id="boardPlayerB" class="player">
           <img class="icon">
@@ -73,6 +55,8 @@
           </button>
         </div>
         <form class="playerForm">
+          <label for="gridSize">Board size:</label>
+          <input type="number" id="gridSize" name="gridSize" step="1" value="3" min="3" max="4" required>
           <label for="playerA" id="labelA">First player name</label>
           <input type="text" name="playerA" id="playerA" placeholder="First player">
           <label for="playerB" id="labelB">Second player name</label>
